@@ -20,29 +20,29 @@ public class ReactToHit : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (isAlive) {
-			if (health < 0f) {
-				animator.SetTrigger ("Faint");
-				Debug.Log ("Painful hit!");
-				isAlive = false;
-			}
-		}
 	}
 
 	void OnCollisionEnter(Collision collision){
 		if (isAlive) {
 			if (canBeDamaged) {
 				canBeDamaged = false;
-				float impactForce = collision.relativeVelocity.magnitude;
-				if (impactForce > painThresholdMagnitude) {
-					animator.SetTrigger ("Wave");
-					Debug.Log ("Painful hit!");
-				} else {
-					Debug.Log ("Regular Hit");
-					animator.SetTrigger ("Pickup");
-				}
 
+				float impactForce = collision.relativeVelocity.magnitude;
 				health -= impactForce;
+
+				if (health < 0f) {
+					animator.SetTrigger ("Faint");
+					Debug.Log ("Yer done sir!");
+					isAlive = false;
+				} else {
+					if (impactForce > painThresholdMagnitude) {
+						animator.SetTrigger ("Wave");
+						Debug.Log ("Painful hit!");
+					} else {
+						Debug.Log ("Regular Hit");
+						animator.SetTrigger ("Pickup");
+					}
+				}
 
 				StartCoroutine (ResetDamagable ());
 			}
